@@ -141,13 +141,17 @@ public class Main {
                 "Enter employee ID to update: "
         );
 
-        Employee existingEmployee =
-                dao.searchEmployee(id);
+        Employee existingEmployee;
 
-        if (existingEmployee == null) {
+        try {
+
+            existingEmployee =
+                    dao.searchEmployee(id);
+
+        } catch (EmployeeNotFoundException e) {
 
             System.out.println(
-                    "Employee not found."
+                    e.getMessage()
             );
 
             return;
@@ -218,37 +222,42 @@ public class Main {
                 "Enter employee ID: "
         );
 
-        Employee employee =
-                dao.searchEmployee(id);
+        try {
 
-        if (employee == null) {
+            Employee employee =
+                    dao.searchEmployee(id);
+
+            System.out.println("\nEmployee Found:");
 
             System.out.println(
-                    "Employee not found."
+                    "ID: " + employee.getId()
             );
 
-            return;
-        }
+            System.out.println(
+                    "Name: " + employee.getName()
+            );
 
-        System.out.println("\nEmployee Found:");
-        System.out.println(
-                "ID: " + employee.getId()
-        );
-        System.out.println(
-                "Name: " + employee.getName()
-        );
-        System.out.println(
-                "Department: " +
-                        employee.getDepartment()
-        );
-        System.out.println(
-                "Position: " +
-                        employee.getPosition()
-        );
-        System.out.println(
-                "Base Salary: " +
-                        employee.getBaseSalary()
-        );
+            System.out.println(
+                    "Department: " +
+                            employee.getDepartment()
+            );
+
+            System.out.println(
+                    "Position: " +
+                            employee.getPosition()
+            );
+
+            System.out.println(
+                    "Base Salary: " +
+                            employee.getBaseSalary()
+            );
+
+        } catch (EmployeeNotFoundException e) {
+
+            System.out.println(
+                    e.getMessage()
+            );
+        }
     }
 
 
@@ -265,13 +274,17 @@ public class Main {
                 "Enter employee ID: "
         );
 
-        Employee employee =
-                dao.searchEmployee(id);
+        Employee employee;
 
-        if (employee == null) {
+        try {
+
+            employee =
+                    dao.searchEmployee(id);
+
+        } catch (EmployeeNotFoundException e) {
 
             System.out.println(
-                    "Employee not found."
+                    e.getMessage()
             );
 
             return;

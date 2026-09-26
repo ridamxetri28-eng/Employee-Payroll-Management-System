@@ -172,7 +172,8 @@ public class EmployeeDAO {
 
 
 
-    public Employee searchEmployee(int id) {
+    public Employee searchEmployee(int id)
+            throws EmployeeNotFoundException {
 
         String sql =
                 "SELECT * FROM employees WHERE id = ?";
@@ -187,31 +188,33 @@ public class EmployeeDAO {
 
             statement.setInt(1, id);
 
-            ResultSet result =
-                    statement.executeQuery();
+            try (ResultSet result = statement.executeQuery()) {
 
-            if (result.next()) {
+                if (result.next()) {
 
-                return new Employee(
-                        result.getInt("id"),
-                        result.getString("name"),
-                        result.getString("department"),
-                        result.getString("position"),
-                        result.getDouble("base_salary")
-                );
+                    return new Employee(
+                            result.getInt("id"),
+                            result.getString("name"),
+                            result.getString("department"),
+                            result.getString("position"),
+                            result.getDouble("base_salary")
+                    );
+                }
             }
 
         } catch (Exception e) {
 
-            System.out.println(
+            throw new RuntimeException(
                     "Error searching employee: " +
                             e.getMessage()
             );
         }
 
-        return null;
+        throw new EmployeeNotFoundException(
+                "Employee with ID " + id +
+                        " was not found."
+        );
     }
-
 
 
     public void viewEmployeesByDepartment(
