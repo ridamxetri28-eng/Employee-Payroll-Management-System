@@ -285,5 +285,48 @@ public class EmployeeDAO {
                             e.getMessage()
             );
         }
+
+    }
+
+    public java.util.ArrayList<Employee> getAllEmployees() {
+
+        java.util.ArrayList<Employee> employees =
+                new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM employees";
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection();
+
+                PreparedStatement statement =
+                        connection.prepareStatement(sql);
+
+                ResultSet result =
+                        statement.executeQuery()
+        ) {
+
+            while (result.next()) {
+
+                Employee employee = new Employee(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("department"),
+                        result.getString("position"),
+                        result.getDouble("base_salary")
+                );
+
+                employees.add(employee);
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error loading employees: " +
+                            e.getMessage()
+            );
+        }
+
+        return employees;
     }
 }

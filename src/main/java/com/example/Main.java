@@ -9,9 +9,19 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         EmployeeDAO dao = new EmployeeDAO();
-        PayrollCalculator payroll = new PayrollCalculator();
+        PayrollCalculator payroll =
+                new PayrollCalculator();
+
+        EmployeeService service =
+                new EmployeeService();
+
+        service.loadEmployees(
+                dao.getAllEmployees()
+        );
 
         boolean running = true;
+
+
 
         while (running) {
 
@@ -25,7 +35,10 @@ public class Main {
             System.out.println("5. Search Employee");
             System.out.println("6. Calculate Payroll");
             System.out.println("7. Department Salary Summary");
-            System.out.println("8. Exit");
+            System.out.println("8. Sort Employees by Salary");
+            System.out.println("9. Filter Employees by Department");
+            System.out.println("10. Search Employee Using Collection");
+            System.out.println("11. Exit");
             System.out.println("======================================");
 
             int choice = readInt(
@@ -36,19 +49,36 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    addEmployee(scanner, dao);
-                    break;
 
+                    addEmployee(scanner, dao);
+
+                    service.loadEmployees(
+                            dao.getAllEmployees()
+                    );
+
+                    break;
                 case 2:
                     dao.viewEmployees();
                     break;
 
                 case 3:
+
                     updateEmployee(scanner, dao);
+
+                    service.loadEmployees(
+                            dao.getAllEmployees()
+                    );
+
                     break;
 
                 case 4:
+
                     deleteEmployee(scanner, dao);
+
+                    service.loadEmployees(
+                            dao.getAllEmployees()
+                    );
+
                     break;
 
                 case 5:
@@ -68,15 +98,80 @@ public class Main {
                     break;
 
                 case 8:
+
+                    service.sortBySalary();
+
+                    break;
+
+                case 9:
+
+                    String department =
+                            readText(
+                                    scanner,
+                                    "Enter department: "
+                            );
+
+                    service.filterByDepartment(
+                            department
+                    );
+
+                    break;
+
+                case 10:
+
+                    int collectionId =
+                            readInt(
+                                    scanner,
+                                    "Enter employee ID: "
+                            );
+
+                    Employee collectionEmployee =
+                            service.findById(collectionId);
+
+                    if (collectionEmployee == null) {
+
+                        System.out.println(
+                                "Employee not found in collection."
+                        );
+
+                    } else {
+
+                        System.out.println(
+                                "Employee found using HashMap:"
+                        );
+
+                        System.out.println(
+                                "ID: " +
+                                        collectionEmployee.getId()
+                        );
+
+                        System.out.println(
+                                "Name: " +
+                                        collectionEmployee.getName()
+                        );
+
+                        System.out.println(
+                                "Department: " +
+                                        collectionEmployee.getDepartment()
+                        );
+
+                    }
+
+                    break;
+
+                case 11:
+
                     running = false;
+
                     System.out.println(
                             "Thank you for using the system!"
                     );
+
                     break;
 
                 default:
                     System.out.println(
-                            "Invalid choice. Please choose 1-8."
+                            "Invalid choice. Please choose 1-10."
                     );
             }
         }
