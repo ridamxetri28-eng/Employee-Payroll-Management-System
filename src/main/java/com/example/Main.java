@@ -1,63 +1,445 @@
 package com.example;
 
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        Scanner scanner = new Scanner(System.in);
+
         EmployeeDAO dao = new EmployeeDAO();
-
-        Employee employee1 = new Employee(
-
-
-                1,
-                "Ram",
-                "IT",
-                "Developer",
-                40000
-        );
-
-        Employee employee2 = new Employee(
-                2,
-                "Sita",
-                "HR",
-                "Manager",
-                50000
-        );
-
-        Employee employee3 = new Employee(
-                3,
-                "Hari",
-                "Finance",
-                "Accountant",
-                45000
-        );
-
-        dao.addEmployee(employee1);
-        dao.addEmployee(employee2);
-        dao.addEmployee(employee3);
-
-        System.out.println("\nAll Employees:");
-
-
-        dao.viewEmployees();
-
         PayrollCalculator payroll = new PayrollCalculator();
 
-        double bonus = 5000;
-        double deduction = 2000;
+        boolean running = true;
 
-        double netSalary = payroll.calculateNetSalary(
-                employee1.getBaseSalary(),
-                bonus,
-                deduction
+        while (running) {
+
+            System.out.println("\n======================================");
+            System.out.println(" Employee Payroll Management System");
+            System.out.println("======================================");
+            System.out.println("1. Add Employee");
+            System.out.println("2. View Employees");
+            System.out.println("3. Update Employee");
+            System.out.println("4. Delete Employee");
+            System.out.println("5. Search Employee");
+            System.out.println("6. Calculate Payroll");
+            System.out.println("7. Department Salary Summary");
+            System.out.println("8. Exit");
+            System.out.println("======================================");
+
+            int choice = readInt(
+                    scanner,
+                    "Enter your choice: "
+            );
+
+            switch (choice) {
+
+                case 1:
+                    addEmployee(scanner, dao);
+                    break;
+
+                case 2:
+                    dao.viewEmployees();
+                    break;
+
+                case 3:
+                    updateEmployee(scanner, dao);
+                    break;
+
+                case 4:
+                    deleteEmployee(scanner, dao);
+                    break;
+
+                case 5:
+                    searchEmployee(scanner, dao);
+                    break;
+
+                case 6:
+                    calculatePayroll(
+                            scanner,
+                            dao,
+                            payroll
+                    );
+                    break;
+
+                case 7:
+                    departmentSummary(scanner, dao);
+                    break;
+
+                case 8:
+                    running = false;
+                    System.out.println(
+                            "Thank you for using the system!"
+                    );
+                    break;
+
+                default:
+                    System.out.println(
+                            "Invalid choice. Please choose 1-8."
+                    );
+            }
+        }
+
+        scanner.close();
+    }
+
+
+
+    private static void addEmployee(
+            Scanner scanner,
+            EmployeeDAO dao) {
+
+        System.out.println("\n===== Add Employee =====");
+
+        int id = readInt(
+                scanner,
+                "Enter employee ID: "
         );
 
-        System.out.println("\nPayroll Details:");
-        System.out.println("Employee: " + employee1.getName());
-        System.out.println("Base Salary: " + employee1.getBaseSalary());
-        System.out.println("Bonus: " + bonus);
-        System.out.println("Deduction: " + deduction);
-        System.out.println("Net Salary: " + netSalary);
+        String name = readText(
+                scanner,
+                "Enter employee name: "
+        );
+
+        String department = readText(
+                scanner,
+                "Enter department: "
+        );
+
+        String position = readText(
+                scanner,
+                "Enter position: "
+        );
+
+        double salary = readDouble(
+                scanner,
+                "Enter base salary: "
+        );
+
+        Employee employee = new Employee(
+                id,
+                name,
+                department,
+                position,
+                salary
+        );
+
+        dao.addEmployee(employee);
+    }
+
+
+
+    private static void updateEmployee(
+            Scanner scanner,
+            EmployeeDAO dao) {
+
+        System.out.println("\n===== Update Employee =====");
+
+        int id = readInt(
+                scanner,
+                "Enter employee ID to update: "
+        );
+
+        Employee existingEmployee =
+                dao.searchEmployee(id);
+
+        if (existingEmployee == null) {
+
+            System.out.println(
+                    "Employee not found."
+            );
+
+            return;
+        }
+
+        System.out.println(
+                "Current employee: " +
+                        existingEmployee.getName()
+        );
+
+        String name = readText(
+                scanner,
+                "Enter new name: "
+        );
+
+        String department = readText(
+                scanner,
+                "Enter new department: "
+        );
+
+        String position = readText(
+                scanner,
+                "Enter new position: "
+        );
+
+        double salary = readDouble(
+                scanner,
+                "Enter new base salary: "
+        );
+
+        Employee employee = new Employee(
+                id,
+                name,
+                department,
+                position,
+                salary
+        );
+
+        dao.updateEmployee(employee);
+    }
+
+
+
+    private static void deleteEmployee(
+            Scanner scanner,
+            EmployeeDAO dao) {
+
+        System.out.println("\n===== Delete Employee =====");
+
+        int id = readInt(
+                scanner,
+                "Enter employee ID to delete: "
+        );
+
+        dao.deleteEmployee(id);
+    }
+
+
+
+    private static void searchEmployee(
+            Scanner scanner,
+            EmployeeDAO dao) {
+
+        System.out.println("\n===== Search Employee =====");
+
+        int id = readInt(
+                scanner,
+                "Enter employee ID: "
+        );
+
+        Employee employee =
+                dao.searchEmployee(id);
+
+        if (employee == null) {
+
+            System.out.println(
+                    "Employee not found."
+            );
+
+            return;
+        }
+
+        System.out.println("\nEmployee Found:");
+        System.out.println(
+                "ID: " + employee.getId()
+        );
+        System.out.println(
+                "Name: " + employee.getName()
+        );
+        System.out.println(
+                "Department: " +
+                        employee.getDepartment()
+        );
+        System.out.println(
+                "Position: " +
+                        employee.getPosition()
+        );
+        System.out.println(
+                "Base Salary: " +
+                        employee.getBaseSalary()
+        );
+    }
+
+
+
+    private static void calculatePayroll(
+            Scanner scanner,
+            EmployeeDAO dao,
+            PayrollCalculator payroll) {
+
+        System.out.println("\n===== Monthly Payroll =====");
+
+        int id = readInt(
+                scanner,
+                "Enter employee ID: "
+        );
+
+        Employee employee =
+                dao.searchEmployee(id);
+
+        if (employee == null) {
+
+            System.out.println(
+                    "Employee not found."
+            );
+
+            return;
+        }
+
+        String month = readText(
+                scanner,
+                "Enter month: "
+        );
+
+        double bonus = readDouble(
+                scanner,
+                "Enter bonus: "
+        );
+
+        double deduction = readDouble(
+                scanner,
+                "Enter deduction: "
+        );
+
+        double netSalary =
+                payroll.calculateNetSalary(
+                        employee.getBaseSalary(),
+                        bonus,
+                        deduction
+                );
+
+        System.out.println("\n==============================");
+        System.out.println("          PAYSLIP");
+        System.out.println("==============================");
+        System.out.println(
+                "Month: " + month
+        );
+        System.out.println(
+                "Employee ID: " + employee.getId()
+        );
+        System.out.println(
+                "Employee: " + employee.getName()
+        );
+        System.out.println(
+                "Department: " +
+                        employee.getDepartment()
+        );
+        System.out.println(
+                "Position: " +
+                        employee.getPosition()
+        );
+        System.out.println(
+                "Base Salary: " +
+                        employee.getBaseSalary()
+        );
+        System.out.println(
+                "Bonus: " + bonus
+        );
+        System.out.println(
+                "Deduction: " + deduction
+        );
+        System.out.println(
+                "Net Salary: " + netSalary
+        );
+        System.out.println("==============================");
+    }
+
+
+
+    private static void departmentSummary(
+            Scanner scanner,
+            EmployeeDAO dao) {
+
+        System.out.println(
+                "\n===== Department Salary Summary ====="
+        );
+
+        String department = readText(
+                scanner,
+                "Enter department: "
+        );
+
+        dao.viewEmployeesByDepartment(
+                department
+        );
+    }
+
+
+
+    private static int readInt(
+            Scanner scanner,
+            String message) {
+
+        while (true) {
+
+            System.out.print(message);
+
+            String input = scanner.nextLine().trim();
+
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+
+                System.out.println(
+                        "Invalid input. Please enter a number."
+                );
+            }
+        }
+    }
+
+
+
+    private static double readDouble(
+            Scanner scanner,
+            String message) {
+
+        while (true) {
+
+            System.out.print(message);
+
+            String input = scanner.nextLine().trim();
+
+            try {
+
+                double value =
+                        Double.parseDouble(input);
+
+                if (value < 0) {
+
+                    System.out.println(
+                            "Value cannot be negative."
+                    );
+
+                    continue;
+                }
+
+                return value;
+
+            } catch (NumberFormatException e) {
+
+                System.out.println(
+                        "Invalid input. Please enter a number."
+                );
+            }
+        }
+    }
+
+
+
+    private static String readText(
+            Scanner scanner,
+            String message) {
+
+        while (true) {
+
+            System.out.print(message);
+
+            String input =
+                    scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+
+                System.out.println(
+                        "Input cannot be empty."
+                );
+
+            } else {
+
+                return input;
+            }
+        }
     }
 }
