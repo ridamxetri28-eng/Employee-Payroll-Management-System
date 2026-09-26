@@ -1,19 +1,37 @@
 package com.example.util;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/employee_payroll";
+    public static Connection getConnection() throws Exception {
 
-    private static final String USER = "root";
+        Properties properties = new Properties();
 
-    private static final String PASSWORD = "Salyan@123";
+        InputStream input =
+                DatabaseConnection.class
+                        .getClassLoader()
+                        .getResourceAsStream("db.properties");
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        if (input == null) {
+            throw new RuntimeException(
+                    "db.properties file not found."
+            );
+        }
+
+        properties.load(input);
+
+        String url = properties.getProperty("db.url");
+        String username = properties.getProperty("db.username");
+        String password = properties.getProperty("db.password");
+
+        return DriverManager.getConnection(
+                url,
+                username,
+                password
+        );
     }
 }

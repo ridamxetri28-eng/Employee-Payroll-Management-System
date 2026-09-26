@@ -1,29 +1,23 @@
 package com.example;
 
-public class Employee {
+public class Employee extends Person implements Payable {
 
-    private int id;
-    private String name;
     private String department;
     private String position;
     private double baseSalary;
 
-    public Employee(int id, String name, String department,
-                    String position, double baseSalary) {
+    public Employee(
+            int id,
+            String name,
+            String department,
+            String position,
+            double baseSalary) {
 
-        this.id = id;
-        this.name = name;
+        super(id, name);
+
         this.department = department;
         this.position = position;
         this.baseSalary = baseSalary;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getDepartment() {
@@ -36,5 +30,34 @@ public class Employee {
 
     public double getBaseSalary() {
         return baseSalary;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setBaseSalary(double baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
+    @Override
+    public void displayRole() {
+        System.out.println(
+                getName() + " works in " +
+                        department + " department."
+        );
+    }
+
+    @Override
+    public double calculateNetSalary(
+            double baseSalary,
+            double bonus,
+            double deduction) {
+
+        return baseSalary + bonus - deduction;
     }
 }
