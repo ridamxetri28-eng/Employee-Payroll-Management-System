@@ -362,7 +362,7 @@ public class Main {
             EmployeeDAO dao,
             PayrollCalculator payroll) {
 
-        System.out.println("\n===== Monthly Payroll =====");
+        System.out.println("\n===== Calculate Payroll =====");
 
         int id = readInt(
                 scanner,
@@ -373,8 +373,7 @@ public class Main {
 
         try {
 
-            employee =
-                    dao.searchEmployee(id);
+            employee = dao.searchEmployee(id);
 
         } catch (EmployeeNotFoundException e) {
 
@@ -385,62 +384,31 @@ public class Main {
             return;
         }
 
+
         String month = readText(
                 scanner,
                 "Enter month: "
         );
+
 
         double bonus = readDouble(
                 scanner,
                 "Enter bonus: "
         );
 
+
         double deduction = readDouble(
                 scanner,
                 "Enter deduction: "
         );
 
-        double netSalary =
-                payroll.calculateNetSalary(
-                        employee.getBaseSalary(),
-                        bonus,
-                        deduction
-                );
 
-        System.out.println("\n==============================");
-        System.out.println("          PAYSLIP");
-        System.out.println("==============================");
-        System.out.println(
-                "Month: " + month
+        payroll.printPayslip(
+                employee,
+                bonus,
+                deduction,
+                month
         );
-        System.out.println(
-                "Employee ID: " + employee.getId()
-        );
-        System.out.println(
-                "Employee: " + employee.getName()
-        );
-        System.out.println(
-                "Department: " +
-                        employee.getDepartment()
-        );
-        System.out.println(
-                "Position: " +
-                        employee.getPosition()
-        );
-        System.out.println(
-                "Base Salary: " +
-                        employee.getBaseSalary()
-        );
-        System.out.println(
-                "Bonus: " + bonus
-        );
-        System.out.println(
-                "Deduction: " + deduction
-        );
-        System.out.println(
-                "Net Salary: " + netSalary
-        );
-        System.out.println("==============================");
     }
 
 
